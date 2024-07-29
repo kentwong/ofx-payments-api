@@ -11,7 +11,7 @@ const validatePayment = (payment: Payment): boolean => {
         return false;
     }
     return true;
-}
+};
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const payment = parseInput(event.body || '{}') as Payment;
@@ -21,7 +21,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
             error: 'Payment data not acceptable.',
         });
     }
-    payment.id = randomUUID();
+    payment.paymentId = randomUUID();
     await createPayment(payment);
-    return buildResponse(201, { result: payment.id });
+    return buildResponse(201, { result: payment.paymentId });
 };
