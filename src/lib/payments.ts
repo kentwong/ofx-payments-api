@@ -4,7 +4,7 @@ import { GetCommand, PutCommand, ScanCommand, ScanCommandInput } from '@aws-sdk/
 export const getPayment = async (paymentId: string): Promise<Payment | null> => {
     const result = await DocumentClient.send(
         new GetCommand({
-            TableName: 'Payments',
+            TableName: 'PaymentsTable',
             Key: { paymentId },
         })
     );
@@ -14,7 +14,7 @@ export const getPayment = async (paymentId: string): Promise<Payment | null> => 
 
 export const listPayments = async (currency?: string): Promise<Payment[]> => {
     let params: ScanCommandInput = {
-        TableName: 'Payments',
+        TableName: 'PaymentsTable',
     };
 
     if (currency) {
@@ -32,7 +32,7 @@ export const listPayments = async (currency?: string): Promise<Payment[]> => {
 export const createPayment = async (payment: Payment) => {
     await DocumentClient.send(
         new PutCommand({
-            TableName: 'Payments',
+            TableName: 'PaymentsTable',
             Item: payment,
         })
     );
