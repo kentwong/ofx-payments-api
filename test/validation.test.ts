@@ -1,4 +1,4 @@
-import { validatePayment, isValidCurrency } from '../src/lib/validation';
+import { validatePayment, isValidCurrency, isValidPaymentId } from '../src/lib/validation';
 import { ERROR_MESSAGES } from '../src/lib/constants';
 import { Payment } from '../src/lib/payments';
 
@@ -100,6 +100,24 @@ describe('Validation Tests', () => {
 
         it('Returns false for an invalid currency.', () => {
             expect(isValidCurrency('INVALID')).toBe(false);
+        });
+    });
+
+    describe('When isValidPaymentId function is used', () => {  
+        it('Returns false and NO_PAYMENT_ID error if paymentId is an empty string', () => {
+            const result = isValidPaymentId('');
+            expect(result).toEqual({ isValid: false, error: ERROR_MESSAGES.NO_PAYMENT_ID });
+        });
+    
+        it('Returns false and INVALID_PAYMENT_ID error if paymentId is not a valid UUID v4', () => {
+            const result = isValidPaymentId('invalid-uuid');
+            expect(result).toEqual({ isValid: false, error: ERROR_MESSAGES.INVALID_PAYMENT_ID });
+        });
+    
+        it('Returns true if paymentId is a valid UUID v4', () => {
+            const validUUID = '09c244ba-e6a4-4677-bf4f-c5b99e8567ad';
+            const result = isValidPaymentId(validUUID);
+            expect(result).toEqual({ isValid: true });
         });
     });
 });

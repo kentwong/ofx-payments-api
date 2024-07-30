@@ -37,6 +37,19 @@ describe('When the user requests the records for a specific payment', () => {
         });
     });
 
+    it('Returns a 400 error when invalid payment ID is provided.', async () => {
+        const result = await handler({
+            pathParameters: {
+                id: 'invalid',
+            },
+        } as unknown as APIGatewayProxyEvent);
+
+        expect(result.statusCode).toBe(400);
+        expect(JSON.parse(result.body)).toEqual({
+            error: ERROR_MESSAGES.INVALID_PAYMENT_ID,
+        });
+    });
+
     it('Returns a 404 error when the payment is not found', async () => {
         const paymentId = randomUUID();
         const getPaymentMock = jest.spyOn(payments, 'getPayment').mockResolvedValueOnce(null);
