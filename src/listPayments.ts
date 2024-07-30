@@ -7,7 +7,7 @@ import { isValidCurrency } from './lib/validation';
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
         const currency = event.queryStringParameters?.currency?.toUpperCase();
-        if (currency && isValidCurrency(currency)) {
+        if (currency && !isValidCurrency(currency)) {
             return buildResponse(400, { error: ERROR_MESSAGES.INVALID_CURRENCY });
         }
 
