@@ -5,7 +5,7 @@
  * This file contains a map of currency codes to their respective currency names.
  * Usage: validate supported currencies from user input.
  */
-export const currencies = new Map([
+export const currencies: Map<string, string> = new Map([
     ['AED', 'United Arab Emirates Dirham'],
     ['AUD', 'Australian Dollar'],
     ['CAD', 'Canadian Dollar'],
