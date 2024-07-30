@@ -1,0 +1,31 @@
+# This file provides sample requests to test the API.
+#
+# Usage: Use the Rest Client extension to send the following requests to the server.
+
+@url = https://ofx.kentwong-hire.me
+
+###
+# GET call to list all the payments
+GET {{url}}/payments
+###
+
+###
+# GET call to list all the payments based on the currency
+GET {{url}}/payments?currency=aud
+###
+
+###
+# POST call to create a new payment
+POST {{url}}/payments
+Content-Type: application/json
+
+{
+    "amount": 3000,
+    "currency": "AUD"
+}
+###
+
+###
+# GET call to get a payment by ID
+GET {{url}}/payments/effdb23f-32a2-4bfc-9cad-33fc3e0e1fea
+###
