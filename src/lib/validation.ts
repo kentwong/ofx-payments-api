@@ -8,7 +8,17 @@ import { ERROR_MESSAGES } from './constants';
 import { currencies } from './currencies';
 import { Payment } from './payments';
 
-export const isValidAmount = (amount: unknown): boolean => {
+const isValidPaymentObject = (payment: unknown): boolean => {
+    if (typeof payment !== 'object' || payment === null) {
+        return false;
+    }
+
+    const validKeys = ['amount', 'currency'];
+    const keys = Object.keys(payment);
+    return keys.every((key) => validKeys.includes(key));
+};
+
+const isValidAmount = (amount: unknown): boolean => {
     return typeof amount === 'number' && amount > 0 && /^\d{1,13}(\.\d{1,2})?$/.test(amount.toString());
 };
 
@@ -17,6 +27,9 @@ export const isValidCurrency = (currency: unknown): boolean => {
 };
 
 export const validatePayment = (payment: Payment): { isValid: boolean; error?: string } => {
+    if (!isValidPaymentObject(payment)) {
+        return { isValid: false, error: ERROR_MESSAGES.INVALID_PAYMENT_DETAILS };
+    }
     if (!isValidAmount(payment.amount)) {
         return { isValid: false, error: ERROR_MESSAGES.INVALID_AMOUNT };
     }
