@@ -4,7 +4,7 @@
  *
  * Usage: validate payment objects before processing.
  */
-import { ERROR_INVALID_AMOUNT, ERROR_INVALID_CURRENCY } from './constants';
+import { ERROR_MESSAGES } from './constants';
 import { currencies } from './currencies';
 import { Payment } from './payments';
 
@@ -18,10 +18,10 @@ const isValidCurrency = (currency: unknown): boolean => {
 
 export const validatePayment = (payment: Payment): { isValid: boolean; error?: string } => {
     if (!isValidAmount(payment.amount)) {
-        return { isValid: false, error: ERROR_INVALID_AMOUNT };
+        return { isValid: false, error: ERROR_MESSAGES.INVALID_AMOUNT };
     }
     if (!isValidCurrency(payment.currency)) {
-        return { isValid: false, error: ERROR_INVALID_CURRENCY };
+        return { isValid: false, error: ERROR_MESSAGES.INVALID_CURRENCY };
     }
     payment.currency = payment.currency.toUpperCase();
     return { isValid: true };
