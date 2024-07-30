@@ -9,17 +9,15 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     try {
         const payment = parseInput(event.body || '{}') as Payment;
 
-        const validation = validatePayment(payment);
-        if (!validation.isValid) {
-            return buildResponse(422, {
-                error: validation.error,
-            });
+        const { isValid, error } = validatePayment(payment);
+        if (!isValid) {
+            return buildResponse(422, { error });
         }
 
-        payment.paymentId = randomUUID();
-        await createPayment(payment);
+        const paymentId = randomUUID();
+        await createPayment({ ...payment, paymentId });
 
-        return buildResponse(201, { result: payment.paymentId });
+        return buildResponse(201, { result: paymentId });
     } catch (error) {
         return buildResponse(500, {
             error: error instanceof Error ? error.message : ERROR_MESSAGES.CREATE_PAYMENT_FAILED,
