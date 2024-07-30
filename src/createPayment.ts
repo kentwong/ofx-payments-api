@@ -15,8 +15,10 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                 error: validation.error,
             });
         }
+
         payment.paymentId = randomUUID();
         await createPayment(payment);
+
         return buildResponse(201, { result: payment.paymentId });
     } catch (error) {
         return buildResponse(500, {

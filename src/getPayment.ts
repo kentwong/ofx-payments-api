@@ -19,6 +19,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                 error: ERROR_MESSAGES.PAYMENT_NOT_FOUND,
             });
         }
+
         return buildResponse(200, payment);
     } catch (error) {
         return buildResponse(500, {

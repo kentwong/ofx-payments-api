@@ -1,6 +1,6 @@
 /**
  * This file provides validation functions for payment amounts and currencies.
- * It exports a validatePayment function that checks if a payment object has a valid amount and currency.
+ * It exports a functions that checks if a payment object has a valid amount and currency.
  *
  * Usage: validate payment objects before processing.
  */
@@ -8,11 +8,11 @@ import { ERROR_MESSAGES } from './constants';
 import { currencies } from './currencies';
 import { Payment } from './payments';
 
-const isValidAmount = (amount: unknown): boolean => {
+export const isValidAmount = (amount: unknown): boolean => {
     return typeof amount === 'number' && amount > 0 && /^\d{1,13}(\.\d{1,2})?$/.test(amount.toString());
 };
 
-const isValidCurrency = (currency: unknown): boolean => {
+export const isValidCurrency = (currency: unknown): boolean => {
     return typeof currency === 'string' && currencies.has(currency.toUpperCase());
 };
 
