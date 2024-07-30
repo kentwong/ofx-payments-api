@@ -7,6 +7,7 @@
 import { ERROR_MESSAGES } from './constants';
 import { currencies } from './currencies';
 import { Payment } from './payments';
+import { REGEX } from './regex';
 
 const isValidPaymentObject = (payment: unknown): boolean => {
     if (typeof payment !== 'object' || payment === null) {
@@ -19,7 +20,7 @@ const isValidPaymentObject = (payment: unknown): boolean => {
 };
 
 const isValidAmount = (amount: unknown): boolean => {
-    return typeof amount === 'number' && amount > 0 && /^\d{1,13}(\.\d{1,2})?$/.test(amount.toString());
+    return typeof amount === 'number' && amount > 0 && REGEX.MAX_AMOUNT.test(amount.toString());
 };
 
 export const isValidCurrency = (currency: unknown): boolean => {
@@ -37,5 +38,15 @@ export const validatePayment = (payment: Payment): { isValid: boolean; error?: s
         return { isValid: false, error: ERROR_MESSAGES.INVALID_CURRENCY };
     }
     payment.currency = payment.currency.toUpperCase();
+    return { isValid: true };
+};
+
+export const isValidPaymentId = (paymentId: unknown): { isValid: boolean; error?: string } => {
+    if (typeof paymentId !== 'string' || !paymentId) {
+        return { isValid: false, error: ERROR_MESSAGES.NO_PAYMENT_ID };
+    }
+    if (!REGEX.UUID_V4.test(paymentId)) {
+        return { isValid: false, error: ERROR_MESSAGES.INVALID_PAYMENT_ID };
+    }
     return { isValid: true };
 };
