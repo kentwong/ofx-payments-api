@@ -1,0 +1,230 @@
+openapi: 3.0.0
+info:
+    title: OFX Payments API
+    description: API for managing payments. This API allows clients to create, retrieve, and list payments. It supports filtering payments by currency and provides detailed error messages for various failure scenarios. The API is designed to be robust and user-friendly, ensuring that all operations are performed securely and efficiently.
+    version: 1.0.0
+servers:
+    - url: https://ofx.kentwong-hire.me
+tags:
+    - name: payments
+      description: Create, retrieve, and list payments
+paths:
+    /payments:
+        get:
+            tags:
+                - payments
+            summary: List all payments
+            description: Retrieve a list of all payments. Optionally, filter payments by currency. The currency parameter is case-insensitive.
+            parameters:
+                - in: query
+                  name: currency
+                  required: false
+                  schema:
+                      type: string
+                      example: 'AUD'
+                  description: Optional. The currency code to filter payments. It can be uppercase or lowercase. Currently OFX-supported currency codes are - AED, AUD, CAD, CHF, CNH, CZK, DKK, EUR, FJD, GBP, HKD, HUF, IDR, ILS, INR, JPY, MXN, MYR, NOK, NZD, PHP, PLN, SBD, SEK, SGD, THB, TOP, TRY, USD, VUV, WST, XPF, ZAR, AZN, BGN, BHD, BND, CNY, EGP, KRW, KWD, LKR, MAD, MGA, OMR, PEN, PGK, PKR, SAR, SCR, TWD, TZS, VND, XOF.
+            responses:
+                '200':
+                    description: A list of payments
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    data:
+                                        type: array
+                                        items:
+                                            $ref: '#/components/schemas/Payment'
+                            examples:
+                                example-1:
+                                    summary: Sample response with all currencies
+                                    value:
+                                        data:
+                                            - amount: 567.89
+                                              paymentId: '09c244ba-e6a4-4677-bf4f-c5b99e8567ad'
+                                              currency: 'USD'
+                                            - amount: 1234.56
+                                              paymentId: '2a7fbd38-476f-4618-b3c3-73b82188101f'
+                                              currency: 'GBP'
+                                            - amount: 890.45
+                                              paymentId: '56bf6ebb-5639-406b-a9d6-0c04f36bf95d'
+                                              currency: 'JPY'
+                                example-2:
+                                    summary: Sample response with AUD currency filter
+                                    value:
+                                        data:
+                                            - amount: 100.89
+                                              paymentId: '56bf6ebb-5639-406b-a9d6-0c04f36bf953'
+                                              currency: 'AUD'
+                                            - amount: 200.56
+                                              paymentId: '09c244ba-e6a4-4677-bf4f-c5b99e8567a1'
+                                              currency: 'AUD'
+                                            - amount: 200.45
+                                              paymentId: '2a7fbd38-476f-4618-b3c3-73b821881012'
+                                              currency: 'AUD'
+                '400':
+                    description: Invalid currency code
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: 'Invalid currency. Please enter a valid OFX-supported currency code.'
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: 'An error occurred while listing the payments. Please try again later.'
+        post:
+            tags:
+                - payments
+            summary: Create a new payment
+            description: Create a new payment with the specified amount and currency. Paymend ID will be generated automatically.
+            requestBody:
+                description: |
+                    The request body should contain the following keys in lowercase, no other keys are allowed:
+                    - **amount**: The amount of the payment. Must be a positive number with up to 13 digits before the decimal point and up to 2 digits after the decimal point.
+                    - **currency**: The currency code for the payment. OFX supported currency codes are:
+                      AED, AUD, CAD, CHF, CNH, CZK, DKK, EUR, FJD, GBP, HKD, HUF, IDR, ILS, INR, JPY, MXN, MYR, NOK, NZD, PHP, PLN, SBD, SEK, SGD, THB, TOP, TRY, USD, VUV, WST, XPF, ZAR, AZN, BGN, BHD, BND, CNY, EGP, KRW, KWD, LKR, MAD, MGA, OMR, PEN, PGK, PKR, SAR, SCR, TWD, TZS, VND, XOF.
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                amount:
+                                    type: number
+                                    example: 3000
+                                currency:
+                                    type: string
+                                    example: 'AUD'
+                            required:
+                                - amount
+                                - currency
+            responses:
+                '201':
+                    description: Payment created successfully
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    result:
+                                        type: string
+                                        description: The unique identifier for the created payment
+                                        example: '8485bdb8-81a2-49dc-88da-f1692edbcd1c'
+                '422':
+                    description: Unprocessable Entity
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                            examples:
+                                invalidCurrency:
+                                    summary: Invalid currency
+                                    value:
+                                        error: 'Invalid currency. Please enter a valid OFX-supported currency code.'
+                                invalidAmount:
+                                    summary: Invalid amount
+                                    value:
+                                        error: 'Invalid amount. Please enter a valid amount with up to 13 digits before the decimal point and up to 2 digits after the decimal point.'
+                                invalidDetails:
+                                    summary: Invalid payment details
+                                    value:
+                                        error: 'Invalid payment details. Please provide a valid JSON with only "amount" and "currency" keys in lowercase.'
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: 'An error occurred while creating the payment. Please try again later.'
+    /payments/{id}:
+        get:
+            tags:
+                - payments
+            summary: Get a payment by ID
+            description: Retrieve a payment by its unique identifier.
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: The unique identifier of the payment. It must be in UUID v4 format.
+                  schema:
+                      type: string
+                      example: effdb23f-32a2-4bfc-9cad-33fc3e0e1fea
+            responses:
+                '200':
+                    description: Payment retrieved successfully
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    amount:
+                                        type: number
+                                        example: 3000
+                                    paymentId:
+                                        type: string
+                                        format: uuid
+                                        example: effdb23f-32a2-4bfc-9cad-33fc3e0e1fea
+                                    currency:
+                                        type: string
+                                        example: AUD
+                '400':
+                    description: Invalid payment ID
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: Invalid payment ID. Please provide a valid payment ID.
+                '404':
+                    description: Payment not found
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: Payment not found.
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                                        example: An error occurred while retrieving the payment. Please try again later.
+components:
+    schemas:
+        Payment:
+            type: object
+            properties:
+                amount:
+                    type: number
+                    description: The amount of the payment
+                currency:
+                    type: string
+                    description: The currency of the payment
+            required:
+                - amount
+                - currency

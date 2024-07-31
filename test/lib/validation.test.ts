@@ -1,6 +1,6 @@
-import { validatePayment, isValidCurrency, isValidPaymentId } from '../src/lib/validation';
-import { ERROR_MESSAGES } from '../src/lib/constants';
-import { Payment } from '../src/lib/payments';
+import { validatePayment, isValidCurrency, isValidPaymentId } from '../../src/lib/validation';
+import { ERROR_MESSAGES } from '../../src/lib/constants';
+import { Payment } from '../../src/lib/payments';
 
 describe('Validation Tests', () => {
     describe('When validatePayment function is used', () => {

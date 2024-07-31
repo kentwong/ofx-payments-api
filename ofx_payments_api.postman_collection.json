@@ -1,0 +1,107 @@
+{
+	"info": {
+		"_postman_id": "5f207690-e92f-4d58-88c3-6aa6182c84f1",
+		"name": "OFX Payments API",
+		"description": "StartFragmentAPI for managing payments. This API allows clients to create, retrieve, and list payments. It supports filtering payments by currency and provides detailed error messages for various failure scenarios. The API is designed to be robust and user-friendly, ensuring that all operations are performed securely and efficiently.EndFragment  \n  \nSwagger: [https://swagger.kentwong-hire.me/](https://swagger.kentwong-hire.me/)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7038531"
+	},
+	"item": [
+		{
+			"name": "Get Payments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://ofx.kentwong-hire.me/payments/92c720fe-6387-4f4c-b750-848e9653b283",
+					"protocol": "https",
+					"host": [
+						"ofx",
+						"kentwong-hire",
+						"me"
+					],
+					"path": [
+						"payments",
+						"92c720fe-6387-4f4c-b750-848e9653b283"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Payments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://ofx.kentwong-hire.me/payments",
+					"protocol": "https",
+					"host": [
+						"ofx",
+						"kentwong-hire",
+						"me"
+					],
+					"path": [
+						"payments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Payments with Currency Filter",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://ofx.kentwong-hire.me/payments?currency=aud",
+					"protocol": "https",
+					"host": [
+						"ofx",
+						"kentwong-hire",
+						"me"
+					],
+					"path": [
+						"payments"
+					],
+					"query": [
+						{
+							"key": "currency",
+							"value": "aud"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Payment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\": 11763.52,\r\n    \"currency\": \"AUD\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://ofx.kentwong-hire.me/payments",
+					"protocol": "https",
+					"host": [
+						"ofx",
+						"kentwong-hire",
+						"me"
+					],
+					"path": [
+						"payments"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
